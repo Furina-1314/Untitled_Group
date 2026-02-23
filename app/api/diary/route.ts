@@ -2,20 +2,20 @@ import { NextResponse } from 'next/server';
 import { serverStore } from '@/lib/serverStore';
 
 export async function GET() {
-  return NextResponse.json({ code: 0, data: serverStore.todos });
+  return NextResponse.json({ code: 0, data: serverStore.diaries });
 }
 
 export async function POST(req: Request) {
   const body = await req.json();
   const now = new Date().toISOString();
-  const todo = {
+  const entry = {
     id: crypto.randomUUID(),
+    date: String(body.date ?? new Date().toISOString().slice(0, 10)),
+    title: String(body.title ?? '未命名日记'),
     content: String(body.content ?? ''),
-    dueDate: body.dueDate,
-    done: false,
     createdAt: now,
     updatedAt: now
   };
-  serverStore.todos.unshift(todo);
-  return NextResponse.json({ code: 0, data: todo });
+  serverStore.diaries.unshift(entry);
+  return NextResponse.json({ code: 0, data: entry });
 }

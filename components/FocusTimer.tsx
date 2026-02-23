@@ -1,46 +1,70 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { calcReward } from '@/lib/reward';
-import type { FocusMode } from '@/lib/types';
+import { useEffect } from 'react';
+import { useAppStore } from '@/lib/store';
+
+function toClock(sec: number) {
+  const mm = String(Math.floor(sec / 60)).padStart(2, '0');
+  const ss = String(sec % 60).padStart(2, '0');
+  return `${mm}:${ss}`;
+}
 
 export function FocusTimer() {
-  const [mode, setMode] = useState<FocusMode>('standard');
-  const [focusMin, setFocusMin] = useState(25);
-  const [breakMin, setBreakMin] = useState(5);
-  const [elapsedSec, setElapsedSec] = useState(0);
-  const [running, setRunning] = useState(false);
-  const [streak, setStreak] = useState(1);
+  const {
+    state,
+    setFocusConfig,
+    startFocus,
+    pauseFocus,
+    resumeFocus,
+    tickFocus,
+    fastForward,
+    endNow
+  } = useAppStore();
 
-  const reward = useMemo(
-    () => calcReward({ elapsedSec, mode, streak }),
-    [elapsedSec, mode, streak]
-  );
+  useEffect(() => {
+    const timer = setInterval(() => tickFocus(), 1000);
+    return () => clearInterval(timer);
+  }, [tickFocus]);
+
+  const runtime = state.focusRuntime;
 
   return (
     <section className="card space-y-3">
-      <h2 className="text-lg font-semibold">专注系统（MVP）</h2>
-      <div className="flex gap-2">
-        <button className="rounded bg-white px-2 py-1" onClick={() => setMode('standard')}>标准</button>
-        <button className="rounded bg-white px-2 py-1" onClick={() => setMode('deep')}>深度</button>
-      </div>
+      <h2 className="text-lg font-semibold">专注系统</h2>
       <div className="grid grid-cols-3 gap-2">
-        <label>专注(min)<input className="w-full rounded border" type="number" value={focusMin} onChange={(e)=>setFocusMin(Number(e.target.value)||25)} /></label>
-        <label>休息(min)<input className="w-full rounded border" type="number" value={breakMin} onChange={(e)=>setBreakMin(Number(e.target.value)||5)} /></label>
-        <label>连续数<input className="w-full rounded border" type="number" value={streak} onChange={(e)=>setStreak(Number(e.target.value)||1)} /></label>
+        <label className="text-sm">专注(min)
+          <input className="w-full rounded border p-1" type="number" min={1} max={180} value={state.focusConfig.focusMin}
+            onChange={(e) => setFocusConfig(Number(e.target.value), state.focusConfig.breakMin, state.focusConfig.mode)} />
+        </label>
+        <label className="text-sm">休息(min)
+          <input className="w-full rounded border p-1" type="number" min={1} max={60} value={state.focusConfig.breakMin}
+            onChange={(e) => setFocusConfig(state.focusConfig.focusMin, Number(e.target.value), state.focusConfig.mode)} />
+        </label>
+        <label className="text-sm">模式
+          <select className="w-full rounded border p-1" value={state.focusConfig.mode}
+            onChange={(e) => setFocusConfig(state.focusConfig.focusMin, state.focusConfig.breakMin, e.target.value as 'standard' | 'deep')}>
+            <option value="standard">标准模式</option>
+            <option value="deep">深度模式</option>
+          </select>
+        </label>
       </div>
-      <div className="flex gap-2">
-        <button className="rounded bg-lofi-accent px-3 py-1 text-white" onClick={() => setRunning(true)}>开始</button>
-        <button className="rounded bg-white px-3 py-1" onClick={() => setRunning(false)}>暂停</button>
-        <button className="rounded bg-white px-3 py-1" onClick={() => setElapsedSec(focusMin * 60)}>快进</button>
-        <button className="rounded bg-white px-3 py-1" onClick={() => { setRunning(false); setElapsedSec(0); }}>立即结束</button>
+
+      <div className="rounded-2xl bg-[#efe3d6] p-4 text-center">
+        <div className="text-4xl font-bold tracking-widest">{toClock(runtime.remainingSec)}</div>
+        <div className="mt-1 text-sm text-gray-600">状态：{runtime.status} ｜ 已专注 {Math.floor(runtime.elapsedSec / 60)} 分钟</div>
       </div>
-      <div>状态：{running ? '进行中' : '暂停/未开始'}，已计时 {Math.floor(elapsedSec / 60)} 分</div>
-      <button className="rounded bg-white px-3 py-1" onClick={() => setElapsedSec((s) => s + 60)}>+1分钟(模拟)</button>
-      <div className="rounded bg-[#f1e9df] p-2 text-sm">
-        结算：积分 {reward.points} / 好感 {reward.affinity} / 达标 {reward.qualified ? '是' : '否'}
+
+      <div className="flex flex-wrap gap-2">
+        <button className="rounded bg-lofi-accent px-3 py-1 text-white" onClick={startFocus}>开始</button>
+        <button className="rounded bg-white px-3 py-1" onClick={pauseFocus}>暂停</button>
+        <button className="rounded bg-white px-3 py-1" onClick={resumeFocus}>恢复</button>
+        <button className="rounded bg-white px-3 py-1" onClick={fastForward}>快进</button>
+        <button className="rounded bg-white px-3 py-1" onClick={endNow}>立即结束并结算</button>
       </div>
-      <p className="text-xs text-gray-600">规则：不足25分钟不计入奖励；深度模式1.1倍；连续倍率1.0/1.2/1.3。</p>
+
+      <div className="rounded bg-[#f7efe5] p-2 text-sm">
+        XP：总计 {state.xp.totalXp} / 今日 {state.xp.todayXp} ｜ 等级 Lv{state.xp.level} ｜ 好感 {state.xp.affinity} ｜ 连续 {state.xp.streakDays} 天
+      </div>
     </section>
   );
 }

@@ -1,22 +1,25 @@
-# Immersive Focus Companion (MVP)
+# Immersive Focus Companion
 
-可运行的 Next.js + TypeScript + TailwindCSS 工程，包含：
-- 番茄钟（开始/暂停/快进/立即结束）
-- 音乐与环境混音（含本地文件导入）
-- 虚拟人物 A 陪伴
-- 笔记、习惯、待办页面
-- API 路由（focus/notes/habits/todos/track）
+完整功能工程：
+- 番茄钟倒计时（开始/暂停/恢复/快进/立即结束结算XP）
+- 音乐与环境（导入、播放、下一首、删除、音量控制）
+- 虚拟人物交互（情境语气变化、语音播报）
+- 笔记、日历日记、习惯追踪、待办管理（增删改查）
 
-## 运行
+## Visual Studio 2022 运行方式（Windows）
+1. 安装 Node.js 20+
+2. VS2022 -> File -> Open -> Folder，打开本项目根目录
+3. 在终端执行：
+   ```bash
+   npm install
+   npm run dev
+   ```
+4. 访问 `http://localhost:3000`
+
+## 命令
 ```bash
-npm install
 npm run dev
+npm run build
+npm run start
+npm run typecheck
 ```
-访问 `http://localhost:3000`
-
-## 关键文件
-- `app/page.tsx`
-- `components/*`
-- `app/api/*`
-- `lib/reward.ts`
-- `IMMERSIVE_FOCUS_MVP_PLAN.md`

@@ -1,28 +1,45 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useAppStore } from '@/lib/store';
+
+function speak(text: string) {
+  if (typeof window === 'undefined' || !window.speechSynthesis) return;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'zh-CN';
+  utter.rate = 1;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utter);
+}
 
 export function CompanionCard() {
-  const [level, setLevel] = useState(1);
-  const [silent, setSilent] = useState(false);
+  const { state, companionMessage, toggleCompanionVoice } = useAppStore();
 
-  const line = useMemo(() => {
-    if (silent) return '已静默：专注优先，我会在你需要时出现。';
-    if (level < 10) return '先完成这一轮，我们慢慢来。';
-    if (level < 30) return '你今天的节奏很稳，继续就会看到变化。';
-    return '我一直在，你已经是非常可靠的自己。';
-  }, [level, silent]);
+  const scene = useMemo(() => {
+    if (state.focusRuntime.status === 'running') return 'running';
+    if (state.focusRuntime.status === 'break') return 'break';
+    return 'idle';
+  }, [state.focusRuntime.status]);
+
+  const toneLabel = {
+    relaxed: '轻松愉快',
+    focused: '认真督促',
+    supportive: '复盘支持'
+  }[state.companion.currentTone];
 
   return (
     <section className="card space-y-2">
-      <h2 className="text-lg font-semibold">虚拟人物 A</h2>
-      <p className="text-xs text-gray-600">AI/系统生成内容，仅供陪伴参考。</p>
-      <div className="flex items-center gap-2">
-        <span>Lv {level}</span>
-        <input type="range" min={1} max={50} value={level} onChange={(e)=>setLevel(Number(e.target.value))} className="w-full"/>
+      <h2 className="text-lg font-semibold">虚拟人物</h2>
+      <p className="text-sm">等级 Lv{state.xp.level} ｜ 当前语气：{toneLabel}</p>
+      <p className="rounded bg-[#f1e9df] p-2">{state.companion.lastMessage}</p>
+      <div className="flex flex-wrap gap-2">
+        <button className="rounded bg-white px-3 py-1" onClick={() => {
+          const text = companionMessage(scene);
+          if (state.companion.voiceEnabled) speak(text);
+        }}>发起互动</button>
+        <button className="rounded bg-white px-3 py-1" onClick={toggleCompanionVoice}>{state.companion.voiceEnabled ? '关闭语音' : '开启语音'}</button>
       </div>
-      <button className="rounded bg-white px-3 py-1" onClick={()=>setSilent(s=>!s)}>{silent ? '取消静默' : '静默模式'}</button>
-      <p className="rounded bg-[#f1e9df] p-2">{line}</p>
+      <p className="text-xs text-gray-500">未开始番茄钟时语气偏轻松，专注进行中语气更严格，休息阶段提供鼓励和复盘建议。</p>
     </section>
   );
 }

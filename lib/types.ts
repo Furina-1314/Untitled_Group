@@ -1,38 +1,57 @@
 export type FocusMode = 'standard' | 'deep';
-export type SessionStatus = 'running' | 'paused' | 'completed' | 'ended';
+export type FocusStatus = 'idle' | 'running' | 'paused' | 'break';
 
-export interface FocusSession {
-  id: string;
+export interface FocusConfig {
+  focusMin: number;
+  breakMin: number;
   mode: FocusMode;
-  plannedFocusMin: number;
-  plannedBreakMin: number;
-  elapsedSec: number;
-  status: SessionStatus;
-  startedAt: string;
 }
 
-export interface RewardResult {
-  points: number;
+export interface FocusRuntime {
+  status: FocusStatus;
+  startedAt?: string;
+  endsAt?: string;
+  remainingSec: number;
+  elapsedSec: number;
+  cycleCount: number;
+  sessionId?: string;
+}
+
+export interface XPProfile {
+  totalXp: number;
+  todayXp: number;
+  level: number;
   affinity: number;
-  streakMultiplier: number;
-  modeMultiplier: number;
-  qualified: boolean;
+  streakDays: number;
+  lastFocusDate?: string;
 }
 
 export interface NoteItem {
   id: string;
-  sessionId?: string;
   title: string;
   content: string;
   tags: string[];
   createdAt: string;
+  updatedAt: string;
+  sessionId?: string;
 }
 
-export interface HabitCheck {
+export interface DiaryEntry {
+  id: string;
+  date: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HabitGoal {
   id: string;
   title: string;
-  checked: boolean;
-  date: string;
+  targetType: 'daily_pomodoro' | 'weekly_focus_min';
+  targetValue: number;
+  completed: boolean;
+  updatedAt: string;
 }
 
 export interface TodoItem {
@@ -40,4 +59,43 @@ export interface TodoItem {
   content: string;
   dueDate?: string;
   done: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AudioTrack {
+  id: string;
+  name: string;
+  objectUrl: string;
+  fileType: string;
+  size: number;
+  createdAt: string;
+}
+
+export interface AudioState {
+  noiseVolume: number;
+  musicVolume: number;
+  mixRatio: number;
+  tracks: AudioTrack[];
+  currentTrackId?: string;
+  playing: boolean;
+}
+
+export interface CompanionState {
+  hidden: boolean;
+  voiceEnabled: boolean;
+  currentTone: 'relaxed' | 'focused' | 'supportive';
+  lastMessage: string;
+}
+
+export interface AppState {
+  focusConfig: FocusConfig;
+  focusRuntime: FocusRuntime;
+  xp: XPProfile;
+  notes: NoteItem[];
+  diaries: DiaryEntry[];
+  habits: HabitGoal[];
+  todos: TodoItem[];
+  audio: AudioState;
+  companion: CompanionState;
 }
