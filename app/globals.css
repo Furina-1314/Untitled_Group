@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-lofi-bg text-lofi-text;
+}
+
+.card {
+  @apply rounded-2xl border border-[#e6dcd0] bg-lofi-panel p-4 shadow-sm;
+}
