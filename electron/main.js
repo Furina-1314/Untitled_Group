@@ -65,15 +65,22 @@ function waitForServer(url, timeoutMs = 45000) {
 async function startNextServer() {
   if (isDev || nextProcess) return;
 
-  const nextBin = path.join(process.resourcesPath, 'app.asar.unpacked', 'node_modules', 'next', 'dist', 'bin', 'next');
-  const fallbackBin = path.join(process.resourcesPath, 'app', 'node_modules', 'next', 'dist', 'bin', 'next');
-  const bin = fs.existsSync(nextBin) ? nextBin : fallbackBin;
+  const standaloneServer = path.join(process.resourcesPath, 'app.asar.unpacked', '.next', 'standalone', 'server.js');
+  const fallbackServer = path.join(process.resourcesPath, '.next', 'standalone', 'server.js');
+  const serverPath = fs.existsSync(standaloneServer) ? standaloneServer : fallbackServer;
 
-  nextProcess = spawn(process.execPath, [bin, 'start', '-p', String(PORT)], {
-    cwd: process.resourcesPath,
+  if (!fs.existsSync(serverPath)) {
+    throw new Error(`standalone server not found: ${serverPath}`);
+  }
+
+  nextProcess = spawn(process.execPath, [serverPath], {
+    cwd: path.dirname(serverPath),
     env: {
       ...process.env,
-      NODE_ENV: 'production'
+      ELECTRON_RUN_AS_NODE: '1',
+      NODE_ENV: 'production',
+      PORT: String(PORT),
+      HOSTNAME: '127.0.0.1'
     },
     stdio: 'ignore',
     detached: false

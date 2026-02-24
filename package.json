@@ -1,6 +1,6 @@
 {
   "name": "immersive-focus-companion",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "main": "electron/main.js",
   "scripts": {
@@ -32,23 +32,12 @@
   "build": {
     "appId": "com.focus.companion.desktop",
     "productName": "ImmersiveFocusCompanion",
-    "asarUnpack": [
-      "node_modules/next/**",
-      ".next/**"
-    ],
     "files": [
-      "app/**",
-      "components/**",
-      "lib/**",
-      "public/**",
-      "styles/**",
       "electron/**",
-      ".next/**",
-      "next.config.mjs",
-      "postcss.config.js",
-      "tailwind.config.ts",
-      "package.json",
-      "node_modules/**"
+      ".next/standalone/**",
+      ".next/static/**",
+      "public/**",
+      "package.json"
     ],
     "directories": {
       "output": "release"

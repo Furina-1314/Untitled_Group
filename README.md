@@ -54,3 +54,16 @@ npm run typecheck
 npm run desktop:dev
 npm run desktop:build
 ```
+
+
+## 面向日常用户发布（只点 EXE 即可）
+1. 你（开发者）先在打包机执行一次：
+   ```bash
+   npm install
+   npm run build
+   npm run desktop:build
+   ```
+2. 把 `release/ImmersiveFocusCompanion-0.2.1.exe` 发给用户。
+3. 用户侧无需 Node、无需 PowerShell、无需 `run dev`，直接双击 EXE 即可离线运行。
+
+说明：当前打包采用 Next standalone 模式，EXE 内会自行拉起本地内置服务。

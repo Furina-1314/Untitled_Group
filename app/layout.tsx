@@ -12,17 +12,17 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="zh-CN">
-      <body className="mx-auto max-w-6xl p-4">
+      <body className="mx-auto h-screen max-w-7xl overflow-hidden p-3">
         <AppProvider>
           <GlobalAudioPlayer />
-          <header className="mb-4 flex flex-wrap gap-3 text-sm">
+          <header className="mb-3 flex h-8 flex-wrap items-center gap-3 text-sm">
             <Link href="/">主控台</Link>
             <Link href="/notes">笔记</Link>
             <Link href="/calendar">日历</Link>
             <Link href="/habits">习惯</Link>
             <Link href="/todos">待办</Link>
           </header>
-          {children}
+          <div className="h-[calc(100vh-3.5rem)] overflow-hidden">{children}</div>
         </AppProvider>
       </body>
     </html>
