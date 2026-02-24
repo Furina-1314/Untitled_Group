@@ -79,6 +79,9 @@ export interface AudioState {
   tracks: AudioTrack[];
   currentTrackId?: string;
   playing: boolean;
+  currentSec: number;
+  durationSec: number;
+  seekToSec?: number;
 }
 
 export interface CompanionState {

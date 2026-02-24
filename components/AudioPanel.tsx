@@ -3,6 +3,13 @@
 import { useMemo } from 'react';
 import { useAppStore } from '@/lib/store';
 
+function toClock(sec: number) {
+  const s = Math.max(0, Math.floor(sec));
+  const m = Math.floor(s / 60);
+  const r = s % 60;
+  return `${String(m).padStart(2, '0')}:${String(r).padStart(2, '0')}`;
+}
+
 export function AudioPanel() {
   const { state, setAudio, addTrack, removeTrack, nextTrack, togglePlay } = useAppStore();
   const currentTrack = useMemo(() => state.audio.tracks.find((t) => t.id === state.audio.currentTrackId), [state.audio.currentTrackId, state.audio.tracks]);
@@ -19,6 +26,25 @@ export function AudioPanel() {
       <label className="block">混音比例: {state.audio.mixRatio.toFixed(1)}
         <input type="range" min={0} max={1} step={0.1} value={state.audio.mixRatio} onChange={(e) => setAudio({ mixRatio: Number(e.target.value) })} className="w-full" />
       </label>
+
+      <div className="rounded bg-[#f7efe5] p-2">
+        <div className="mb-1 flex items-center justify-between text-xs text-gray-700">
+          <span>{toClock(state.audio.currentSec)}</span>
+          <span>{toClock(state.audio.durationSec)}</span>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={Math.max(1, state.audio.durationSec)}
+          step={0.1}
+          value={Math.min(state.audio.currentSec, Math.max(1, state.audio.durationSec))}
+          onChange={(e) => {
+            const sec = Number(e.target.value);
+            setAudio({ currentSec: sec, seekToSec: sec });
+          }}
+          className="w-full"
+        />
+      </div>
 
       <div className="space-y-2 rounded bg-[#f7efe5] p-2">
         <div className="flex flex-wrap items-center gap-2">

@@ -37,6 +37,14 @@ npm run dev
 npm run desktop:dev
 ```
 
+### 白屏排查
+- 开发模式必须开两个终端：
+  1) `npm run dev`
+  2) `npm run desktop:dev`
+- 若仍白屏，请查看错误日志文件：
+  - Windows: `%APPDATA%/ImmersiveFocusCompanion/desktop-error.log`
+  - 其中会记录服务未启动/页面加载失败等原因。
+
 ## 命令
 ```bash
 npm run dev

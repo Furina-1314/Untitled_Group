@@ -15,7 +15,7 @@ const initialState: AppState = {
   diaries: [],
   habits: [],
   todos: [],
-  audio: { noiseVolume: 50, musicVolume: 40, mixRatio: 0.5, tracks: [], playing: false },
+  audio: { noiseVolume: 50, musicVolume: 40, mixRatio: 0.5, tracks: [], playing: false, currentSec: 0, durationSec: 0 },
   companion: { hidden: false, voiceEnabled: true, currentTone: 'relaxed', lastMessage: '今天也一起专注完成目标。' }
 };
 
@@ -213,13 +213,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const removeTrack = (id: string) => setState((prev) => {
     const tracks = prev.audio.tracks.filter((t) => t.id !== id);
     const currentTrackId = prev.audio.currentTrackId === id ? tracks[0]?.id : prev.audio.currentTrackId;
-    return { ...prev, audio: { ...prev.audio, tracks, currentTrackId } };
+    return { ...prev, audio: { ...prev.audio, tracks, currentTrackId, currentSec: 0, durationSec: 0 } };
   });
   const nextTrack = () => setState((prev) => {
     const idx = prev.audio.tracks.findIndex((t) => t.id === prev.audio.currentTrackId);
     if (idx < 0 || prev.audio.tracks.length === 0) return prev;
     const next = prev.audio.tracks[(idx + 1) % prev.audio.tracks.length];
-    return { ...prev, audio: { ...prev.audio, currentTrackId: next.id } };
+    return { ...prev, audio: { ...prev.audio, currentTrackId: next.id, currentSec: 0 } };
   });
   const togglePlay = () => setState((prev) => ({ ...prev, audio: { ...prev.audio, playing: !prev.audio.playing } }));
 
