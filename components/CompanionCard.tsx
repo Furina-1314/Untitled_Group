@@ -14,32 +14,24 @@ function speak(text: string) {
 
 export function CompanionCard() {
   const { state, companionMessage, toggleCompanionVoice } = useAppStore();
-
-  const scene = useMemo(() => {
-    if (state.focusRuntime.status === 'running') return 'running';
-    if (state.focusRuntime.status === 'break') return 'break';
-    return 'idle';
-  }, [state.focusRuntime.status]);
-
-  const toneLabel = {
-    relaxed: '轻松愉快',
-    focused: '认真督促',
-    supportive: '复盘支持'
-  }[state.companion.currentTone];
+  const scene = useMemo(() => (state.focusRuntime.status === 'running' ? 'running' : state.focusRuntime.status === 'break' ? 'break' : 'idle'), [state.focusRuntime.status]);
+  const toneLabel = { relaxed: '轻松', focused: '认真', supportive: '鼓励' }[state.companion.currentTone];
 
   return (
-    <section className="card space-y-2">
-      <h2 className="text-lg font-semibold">虚拟人物</h2>
-      <p className="text-sm">等级 Lv{state.xp.level} ｜ 当前语气：{toneLabel}</p>
-      <p className="rounded bg-[#f1e9df] p-2">{state.companion.lastMessage}</p>
-      <div className="flex flex-wrap gap-2">
-        <button className="rounded bg-white px-3 py-1" onClick={() => {
+    <section className="card flex flex-col gap-2 overflow-hidden">
+      <h2 className="card-title">🐰 陪伴角色</h2>
+      <div className="rounded-2xl bg-[#fff5fa] p-3">
+        <p className="text-xs">Lv{state.xp.level} · 语气：{toneLabel}</p>
+        <p className="mt-2 break-words text-sm">{state.companion.lastMessage}</p>
+      </div>
+      <div className="flex gap-2 text-xs">
+        <button className="soft-chip" onClick={() => {
           const text = companionMessage(scene);
           if (state.companion.voiceEnabled) speak(text);
-        }}>发起互动</button>
-        <button className="rounded bg-white px-3 py-1" onClick={toggleCompanionVoice}>{state.companion.voiceEnabled ? '关闭语音' : '开启语音'}</button>
+        }}>互动</button>
+        <button className="soft-chip" onClick={toggleCompanionVoice}>{state.companion.voiceEnabled ? '关闭语音' : '开启语音'}</button>
       </div>
-      <p className="text-xs text-gray-500">未开始番茄钟时语气偏轻松，专注进行中语气更严格，休息阶段提供鼓励和复盘建议。</p>
+      <p className="mt-auto text-xs text-gray-500">专注时更严格，休息时更温和。</p>
     </section>
   );
 }

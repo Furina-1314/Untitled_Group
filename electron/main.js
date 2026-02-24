@@ -17,6 +17,22 @@ function logError(message) {
   }
 }
 
+function findStandaloneServer() {
+  const appPath = app.getAppPath();
+  const appDir = appPath.endsWith('.asar') ? path.dirname(appPath) : appPath;
+  const appAsarUnpacked = appPath.endsWith('.asar') ? `${appPath}.unpacked` : appPath;
+
+  const candidates = [
+    path.join(appAsarUnpacked, '.next', 'standalone', 'server.js'),
+    path.join(appDir, '.next', 'standalone', 'server.js'),
+    path.join(process.resourcesPath, 'app.asar.unpacked', '.next', 'standalone', 'server.js'),
+    path.join(process.resourcesPath, 'app', '.next', 'standalone', 'server.js'),
+    path.join(process.resourcesPath, '.next', 'standalone', 'server.js')
+  ];
+
+  return candidates.find((p) => fs.existsSync(p));
+}
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 1366,
@@ -35,7 +51,7 @@ function createWindow() {
   win.loadURL(url).catch((err) => {
     const msg = `loadURL failed: ${err?.message || err}`;
     logError(msg);
-    dialog.showErrorBox('页面加载失败', `${msg}\n\n请确认 Next 服务是否已启动。`);
+    dialog.showErrorBox('页面加载失败', `${msg}\n\n请确认本地服务是否已启动。`);
   });
 }
 
@@ -65,12 +81,9 @@ function waitForServer(url, timeoutMs = 45000) {
 async function startNextServer() {
   if (isDev || nextProcess) return;
 
-  const standaloneServer = path.join(process.resourcesPath, 'app.asar.unpacked', '.next', 'standalone', 'server.js');
-  const fallbackServer = path.join(process.resourcesPath, '.next', 'standalone', 'server.js');
-  const serverPath = fs.existsSync(standaloneServer) ? standaloneServer : fallbackServer;
-
-  if (!fs.existsSync(serverPath)) {
-    throw new Error(`standalone server not found: ${serverPath}`);
+  const serverPath = findStandaloneServer();
+  if (!serverPath) {
+    throw new Error(`standalone server not found. appPath=${app.getAppPath()} resourcesPath=${process.resourcesPath}`);
   }
 
   nextProcess = spawn(process.execPath, [serverPath], {
@@ -100,7 +113,10 @@ app.whenReady().then(async () => {
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     logError(msg);
-    dialog.showErrorBox('启动失败', `${msg}\n\n开发模式请先执行 npm run dev，再执行 npm run desktop:dev`);
+    const hint = isDev
+      ? '开发模式请先执行 npm run dev，再执行 npm run desktop:dev'
+      : '请确认打包前已执行 npm run build，且产物包含 .next/standalone。';
+    dialog.showErrorBox('启动失败', `${msg}\n\n${hint}`);
     app.quit();
   }
 

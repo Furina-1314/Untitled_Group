@@ -9,20 +9,40 @@ export const metadata = {
   description: '专注、音乐、陪伴、笔记、习惯、待办一体化应用'
 };
 
+const navs = [
+  { href: '/', label: '主控台' },
+  { href: '/notes', label: '笔记' },
+  { href: '/calendar', label: '日历' },
+  { href: '/habits', label: '习惯' },
+  { href: '/todos', label: '待办' }
+];
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="zh-CN">
-      <body className="mx-auto h-screen max-w-7xl overflow-hidden p-3">
+      <body className="lofi-bg min-h-screen overflow-hidden text-lofi-text">
         <AppProvider>
           <GlobalAudioPlayer />
-          <header className="mb-3 flex h-8 flex-wrap items-center gap-3 text-sm">
-            <Link href="/">主控台</Link>
-            <Link href="/notes">笔记</Link>
-            <Link href="/calendar">日历</Link>
-            <Link href="/habits">习惯</Link>
-            <Link href="/todos">待办</Link>
-          </header>
-          <div className="h-[calc(100vh-3.5rem)] overflow-hidden">{children}</div>
+          <div className="pointer-events-none fixed inset-0 -z-10">
+            <div className="blob blob-a" />
+            <div className="blob blob-b" />
+            <div className="blob blob-c" />
+          </div>
+
+          <div className="mx-auto flex h-screen w-full max-w-7xl flex-col px-3 py-3">
+            <header className="mb-3 flex h-10 items-center justify-between rounded-2xl border border-white/40 bg-white/50 px-3 backdrop-blur-sm">
+              <div className="text-sm font-semibold">🌸 Focus Companion</div>
+              <nav className="flex items-center gap-2 text-xs sm:text-sm">
+                {navs.map((n) => (
+                  <Link key={n.href} href={n.href} className="rounded-full px-2 py-1 hover:bg-white/70">
+                    {n.label}
+                  </Link>
+                ))}
+              </nav>
+            </header>
+
+            <div className="min-h-0 flex-1">{children}</div>
+          </div>
         </AppProvider>
       </body>
     </html>

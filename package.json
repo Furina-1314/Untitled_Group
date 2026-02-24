@@ -47,6 +47,7 @@
         "portable"
       ],
       "artifactName": "ImmersiveFocusCompanion-${version}.exe"
-    }
+    },
+    "asar": false
   }
 }

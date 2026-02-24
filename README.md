@@ -67,3 +67,9 @@ npm run desktop:build
 3. 用户侧无需 Node、无需 PowerShell、无需 `run dev`，直接双击 EXE 即可离线运行。
 
 说明：当前打包采用 Next standalone 模式，EXE 内会自行拉起本地内置服务。
+
+
+### EXE 报错 `standalone server not found` 处理
+- 必须先执行 `npm run build` 生成 `.next/standalone`。
+- 再执行 `npm run desktop:build`。
+- 新版打包已关闭 asar（`asar:false`），避免 server.js 在包内路径不可访问。
