@@ -2,6 +2,7 @@ import './globals.css';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { AppProvider } from '@/lib/store';
+import { GlobalAudioPlayer } from '@/components/GlobalAudioPlayer';
 
 export const metadata = {
   title: '沉浸式专注陪伴工具',
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="zh-CN">
       <body className="mx-auto max-w-6xl p-4">
         <AppProvider>
+          <GlobalAudioPlayer />
           <header className="mb-4 flex flex-wrap gap-3 text-sm">
             <Link href="/">主控台</Link>
             <Link href="/notes">笔记</Link>

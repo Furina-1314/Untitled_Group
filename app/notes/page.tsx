@@ -25,7 +25,11 @@ export default function NotesPage() {
         {notes.map((n) => (
           <li key={n.id} className="rounded bg-[#f7efe5] p-2">
             <input className="mb-2 w-full rounded border p-2" value={n.title} onChange={(e) => updateNote(n.id, { title: e.target.value })} />
-            <textarea className="mb-2 h-24 w-full rounded border p-2" value={n.content} onChange={(e) => updateNote(n.id, { content: e.target.value })} />
+            <textarea
+              className="mb-2 min-h-[320px] w-full resize-y rounded border p-3 font-mono text-sm leading-6"
+              value={n.content}
+              onChange={(e) => updateNote(n.id, { content: e.target.value })}
+            />
             <input className="mb-2 w-full rounded border p-2" value={n.tags.join(',')} onChange={(e) => updateNote(n.id, { tags: e.target.value.split(',').map((x) => x.trim()).filter(Boolean) })} />
             <p className="text-xs text-gray-500">创建：{new Date(n.createdAt).toLocaleString()} ｜ 编辑：{new Date(n.updatedAt).toLocaleString()}</p>
             <button className="mt-2 rounded bg-white px-2 py-1" onClick={() => deleteNote(n.id)}>删除</button>

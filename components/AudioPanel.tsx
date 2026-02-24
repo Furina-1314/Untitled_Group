@@ -1,24 +1,11 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { useAppStore } from '@/lib/store';
 
 export function AudioPanel() {
   const { state, setAudio, addTrack, removeTrack, nextTrack, togglePlay } = useAppStore();
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const currentTrack = useMemo(() => state.audio.tracks.find((t) => t.id === state.audio.currentTrackId), [state.audio.currentTrackId, state.audio.tracks]);
-
-  useEffect(() => {
-    if (!audioRef.current) return;
-    audioRef.current.volume = state.audio.musicVolume / 100;
-  }, [state.audio.musicVolume]);
-
-  useEffect(() => {
-    const player = audioRef.current;
-    if (!player || !currentTrack) return;
-    player.src = currentTrack.objectUrl;
-    if (state.audio.playing) void player.play();
-  }, [currentTrack, state.audio.playing]);
 
   return (
     <section className="card space-y-3">
@@ -54,12 +41,11 @@ export function AudioPanel() {
           <button className="rounded bg-white px-2 py-1" onClick={togglePlay}>{state.audio.playing ? '暂停' : '播放'}</button>
           <button className="rounded bg-white px-2 py-1" onClick={nextTrack}>下一首</button>
         </div>
-        <audio ref={audioRef} controls className="w-full" onEnded={nextTrack} />
-        <p className="text-sm">当前：{currentTrack?.name ?? '未选择曲目'}</p>
+        <p className="text-sm">当前：{currentTrack?.name ?? '未选择曲目'}（列表循环已开启）</p>
         <ul className="space-y-1">
           {state.audio.tracks.map((track) => (
             <li key={track.id} className="flex items-center gap-2 text-sm">
-              <button className="rounded bg-white px-2 py-1" onClick={() => setAudio({ currentTrackId: track.id })}>选择</button>
+              <button className="rounded bg-white px-2 py-1" onClick={() => setAudio({ currentTrackId: track.id, playing: true })}>选择并播放</button>
               <span className="flex-1 truncate">{track.name}</span>
               <button className="rounded bg-white px-2 py-1" onClick={() => removeTrack(track.id)}>删除</button>
             </li>

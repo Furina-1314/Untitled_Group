@@ -13,7 +13,12 @@ export function QuickNote() {
     <section className="card space-y-2">
       <h2 className="text-lg font-semibold">快速笔记</h2>
       <input className="w-full rounded border p-2" placeholder="标题" value={title} onChange={(e) => setTitle(e.target.value)} />
-      <textarea className="h-24 w-full rounded border p-2" placeholder="记录要点" value={content} onChange={(e) => setContent(e.target.value)} />
+      <textarea
+        className="min-h-[220px] w-full resize-y rounded border p-3 font-mono text-sm leading-6"
+        placeholder="记录要点（支持多行，类似 txt 编辑）"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+      />
       <input className="w-full rounded border p-2" placeholder="标签（逗号分隔）" value={tags} onChange={(e) => setTags(e.target.value)} />
       <button
         className="rounded bg-lofi-accent px-3 py-1 text-white"
