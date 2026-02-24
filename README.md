@@ -16,10 +16,33 @@
    ```
 4. 访问 `http://localhost:3000`
 
+## 打包为本地离线 EXE（Electron）
+> 打包步骤需要联网拉取依赖；打包完成后的 EXE 可离线运行。
+
+1. 安装依赖并构建 Next 产物：
+   ```bash
+   npm install
+   npm run build
+   ```
+2. 生成 Windows 便携版 EXE：
+   ```bash
+   npm run desktop:build
+   ```
+3. 产物目录：
+   - `release/ImmersiveFocusCompanion-0.2.0.exe`
+
+### 本地桌面调试
+```bash
+npm run dev
+npm run desktop:dev
+```
+
 ## 命令
 ```bash
 npm run dev
 npm run build
 npm run start
 npm run typecheck
+npm run desktop:dev
+npm run desktop:build
 ```
