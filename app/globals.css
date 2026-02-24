@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  @apply bg-lofi-bg text-lofi-text;
+}
+
+.card {
+  @apply h-full rounded-2xl border border-[#e6dcd0] bg-lofi-panel p-3 shadow-sm;
+}
