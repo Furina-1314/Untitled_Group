@@ -6,6 +6,7 @@ import { useAppStore } from '@/lib/store';
 export function GlobalAudioPlayer() {
   const { state, nextTrack, setAudio } = useAppStore();
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const sourceTrackIdRef = useRef<string | undefined>(undefined);
   const currentTrack = useMemo(() => state.audio.tracks.find((t) => t.id === state.audio.currentTrackId), [state.audio.currentTrackId, state.audio.tracks]);
 
   useEffect(() => {
@@ -19,24 +20,28 @@ export function GlobalAudioPlayer() {
     if (!currentTrack) {
       player.removeAttribute('src');
       player.load();
+      sourceTrackIdRef.current = undefined;
       setAudio({ currentSec: 0, durationSec: 0, playing: false });
       return;
     }
 
-    if (player.src !== currentTrack.objectUrl) {
+    if (sourceTrackIdRef.current !== currentTrack.id) {
       player.src = currentTrack.objectUrl;
       player.load();
+      sourceTrackIdRef.current = currentTrack.id;
       setAudio({ currentSec: 0 });
     }
+  }, [currentTrack, setAudio]);
 
+  useEffect(() => {
+    const player = audioRef.current;
+    if (!player || !currentTrack) return;
     if (state.audio.playing) {
-      void player.play().catch(() => {
-        setAudio({ playing: false });
-      });
+      void player.play().catch(() => setAudio({ playing: false }));
     } else {
       player.pause();
     }
-  }, [currentTrack, state.audio.playing, setAudio]);
+  }, [state.audio.playing, currentTrack, setAudio]);
 
   useEffect(() => {
     if (!audioRef.current) return;

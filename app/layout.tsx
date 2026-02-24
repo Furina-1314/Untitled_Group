@@ -1,7 +1,6 @@
 'use client';
 
 import './globals.css';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { AppProvider, useAppStore } from '@/lib/store';
@@ -49,10 +48,10 @@ function Shell({ children }: { children: ReactNode }) {
               {navs.map((n) => {
                 const active = pathname === n.href;
                 return (
-                  <Link key={n.href} href={n.href} className={`side-link ${active ? 'side-link-active' : ''}`}>
+                  <a key={n.href} href={n.href} className={`side-link ${active ? 'side-link-active' : ''}`}>
                     <span className="text-base">{n.icon}</span>
                     <span className="hidden lg:inline">{n.label}</span>
-                  </Link>
+                  </a>
                 );
               })}
             </nav>

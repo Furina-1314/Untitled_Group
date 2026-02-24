@@ -38,6 +38,35 @@ npm run desktop:dev
 ```
 
 
+
+### `npm install` 报错 `ENOENT ... package.json`（Windows）
+如果日志里是下面这种路径：
+
+- `...\Untitled-Group(VS-Code)\package.json`（缺少 `Untitled_Group` 子目录）
+
+说明你在 **错误目录** 执行了 npm，当前目录没有 `package.json`。
+
+请先切到项目根目录再执行：
+
+```powershell
+# 进入真正包含 package.json 的目录
+cd "F:\Microsoft Visual Studio\source\repos\Untitled-Group(VS-Code)\Untitled_Group"
+
+# 确认目录正确
+Get-ChildItem package.json
+
+# 再安装依赖
+npm install
+```
+
+也可以不切目录，直接指定前缀目录执行：
+
+```powershell
+npm --prefix "F:\Microsoft Visual Studio\source\repos\Untitled-Group(VS-Code)\Untitled_Group" install
+```
+
+如果你在 VS2022/VSCode 内置终端运行，请确认终端当前路径就是项目目录（有 `package.json` 的目录）。
+
 ### `npm install` 报错 `EBUSY ... electron ... default_app.asar`（Windows）
 这是 **文件被占用** 导致的重命名失败，通常是 Electron/VSCode/杀毒软件正在锁定 `node_modules/electron`。
 
