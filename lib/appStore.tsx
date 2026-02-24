@@ -16,7 +16,8 @@ const initialState: AppState = {
   habits: [],
   todos: [],
   audio: { noiseVolume: 50, musicVolume: 40, mixRatio: 0.5, tracks: [], playing: false, currentSec: 0, durationSec: 0 },
-  companion: { hidden: false, voiceEnabled: true, currentTone: 'relaxed', lastMessage: '今天也一起专注完成目标。' }
+  companion: { hidden: false, voiceEnabled: true, currentTone: 'relaxed', lastMessage: '今天也一起专注完成目标。' },
+  ui: {}
 };
 
 type AppContextType = {
@@ -47,6 +48,7 @@ type AppContextType = {
   togglePlay: () => void;
   companionMessage: (scene: 'idle' | 'running' | 'break') => string;
   toggleCompanionVoice: () => void;
+  setBackgroundImage: (image?: string) => void;
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -240,6 +242,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return mapping[scene];
   };
   const toggleCompanionVoice = () => setState((prev) => ({ ...prev, companion: { ...prev.companion, voiceEnabled: !prev.companion.voiceEnabled } }));
+  const setBackgroundImage = (image?: string) => setState((prev) => ({ ...prev, ui: { ...prev.ui, backgroundImage: image } }));
 
   const value = useMemo<AppContextType>(() => ({
     state,
@@ -268,7 +271,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     nextTrack,
     togglePlay,
     companionMessage,
-    toggleCompanionVoice
+    toggleCompanionVoice,
+    setBackgroundImage
   }), [state]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

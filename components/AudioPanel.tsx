@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useAppStore } from '@/lib/store';
 
 function toClock(sec: number) {
@@ -12,9 +12,7 @@ function toClock(sec: number) {
 
 export function AudioPanel() {
   const { state, setAudio, addTrack, removeTrack, nextTrack, togglePlay } = useAppStore();
-  const [showAll, setShowAll] = useState(false);
   const currentTrack = useMemo(() => state.audio.tracks.find((t) => t.id === state.audio.currentTrackId), [state.audio.currentTrackId, state.audio.tracks]);
-  const visibleTracks = showAll ? state.audio.tracks : state.audio.tracks.slice(0, 4);
 
   return (
     <section className="card flex flex-col gap-2 overflow-hidden">
@@ -51,20 +49,16 @@ export function AudioPanel() {
 
       <p className="truncate text-xs">当前：{currentTrack?.name ?? '未选择曲目'}</p>
 
-      <ul className="space-y-1 text-xs">
-        {visibleTracks.map((track) => (
-          <li key={track.id} className="flex items-center gap-1">
+      <ul className="h-[132px] space-y-1 overflow-y-auto pr-1 text-xs">
+        {state.audio.tracks.map((track) => (
+          <li key={track.id} className="flex h-8 items-center gap-1">
             <button className="soft-chip" onClick={() => setAudio({ currentTrackId: track.id, playing: true })}>播放</button>
             <span className="flex-1 truncate">{track.name}</span>
             <button className="soft-chip" onClick={() => removeTrack(track.id)}>删</button>
           </li>
         ))}
       </ul>
-      {state.audio.tracks.length > 4 && (
-        <button className="self-start text-xs text-[#7f5f73] underline" onClick={() => setShowAll((s) => !s)}>
-          {showAll ? '收起列表' : `展开全部（${state.audio.tracks.length} 首）`}
-        </button>
-      )}
+      <p className="text-[11px] text-gray-500">播放列表固定显示4首高度，曲目较多时可滚动浏览。</p>
     </section>
   );
 }

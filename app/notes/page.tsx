@@ -19,15 +19,15 @@ export default function NotesPage() {
   }), [state.notes, keyword, tag]);
 
   return (
-    <main className="card space-y-3">
+    <main className="card h-full space-y-3 overflow-auto">
       <h1 className="text-xl font-semibold">笔记</h1>
 
       <section className="rounded bg-[#f7efe5] p-3">
         <h2 className="mb-2 text-sm font-semibold">新增笔记</h2>
         <input className="mb-2 w-full rounded border p-2" placeholder="标题" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
-        <textarea className="mb-2 min-h-[160px] w-full resize-y rounded border p-2" placeholder="内容" value={newContent} onChange={(e) => setNewContent(e.target.value)} />
+        <textarea className="mb-2 h-24 w-full resize-none rounded border p-2" placeholder="内容" value={newContent} onChange={(e) => setNewContent(e.target.value)} />
         <input className="mb-2 w-full rounded border p-2" placeholder="标签（逗号分隔）" value={newTags} onChange={(e) => setNewTags(e.target.value)} />
-        <button className="rounded bg-lofi-accent px-3 py-1 text-white" onClick={() => {
+        <button className="soft-chip" onClick={() => {
           if (!newTitle.trim() && !newContent.trim()) return;
           saveQuickNote({ title: newTitle || '未命名笔记', content: newContent, tags: newTags.split(',').map((x) => x.trim()).filter(Boolean) });
           setNewTitle('');
@@ -52,16 +52,19 @@ export default function NotesPage() {
               </button>
 
               {expanded && (
-                <div className="mt-2">
-                  <input className="mb-2 w-full rounded border p-2" value={n.title} onChange={(e) => updateNote(n.id, { title: e.target.value })} />
+                <div className="mt-2 space-y-2">
+                  <input className="w-full rounded border p-2" value={n.title} onChange={(e) => updateNote(n.id, { title: e.target.value })} />
                   <textarea
-                    className="mb-2 min-h-[320px] w-full resize-y rounded border p-3 font-mono text-sm leading-6"
+                    className="max-h-[42vh] min-h-[180px] w-full resize-y rounded border p-3 font-mono text-sm leading-6"
                     value={n.content}
                     onChange={(e) => updateNote(n.id, { content: e.target.value })}
                   />
-                  <input className="mb-2 w-full rounded border p-2" value={n.tags.join(',')} onChange={(e) => updateNote(n.id, { tags: e.target.value.split(',').map((x) => x.trim()).filter(Boolean) })} />
+                  <input className="w-full rounded border p-2" value={n.tags.join(',')} onChange={(e) => updateNote(n.id, { tags: e.target.value.split(',').map((x) => x.trim()).filter(Boolean) })} />
                   <p className="text-xs text-gray-500">创建：{new Date(n.createdAt).toLocaleString()} ｜ 编辑：{new Date(n.updatedAt).toLocaleString()}</p>
-                  <button className="mt-2 rounded bg-white px-2 py-1" onClick={() => deleteNote(n.id)}>删除</button>
+                  <div className="flex gap-2">
+                    <button className="soft-chip" onClick={() => setExpandedId(null)}>保存并收起</button>
+                    <button className="soft-chip" onClick={() => deleteNote(n.id)}>删除</button>
+                  </div>
                 </div>
               )}
             </li>

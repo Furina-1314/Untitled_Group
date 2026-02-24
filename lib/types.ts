@@ -91,6 +91,10 @@ export interface CompanionState {
   lastMessage: string;
 }
 
+export interface UiPrefs {
+  backgroundImage?: string;
+}
+
 export interface AppState {
   focusConfig: FocusConfig;
   focusRuntime: FocusRuntime;
@@ -101,4 +105,5 @@ export interface AppState {
   todos: TodoItem[];
   audio: AudioState;
   companion: CompanionState;
+  ui: UiPrefs;
 }
