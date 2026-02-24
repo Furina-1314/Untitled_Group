@@ -9,13 +9,13 @@ export default function NotesPage() {
 
   return (
     <main className="mx-auto max-w-5xl space-y-5">
-      <h1 className="text-5xl font-bold text-stone-800">Notes</h1>
+      <h1 className="text-5xl font-bold text-stone-800">笔记</h1>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <div className="card h-72">
           <textarea
             className="h-[170px] w-full resize-none bg-transparent text-3xl text-stone-500 outline-none"
-            placeholder="Write a new note..."
+            placeholder="写一条新笔记..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
@@ -27,7 +27,7 @@ export default function NotesPage() {
               setContent('');
             }}
           >
-            + Add Note
+            + 添加笔记
           </button>
         </div>
 

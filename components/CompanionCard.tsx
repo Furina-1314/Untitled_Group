@@ -22,16 +22,16 @@ export function CompanionCard() {
       <div className="h-24 w-24 overflow-hidden rounded-full border-4 border-white shadow-md">
         <img
           src={state.ui.avatarImage || 'https://picsum.photos/seed/lofi_study_girl/300/300'}
-          alt="Companion"
+          alt="陪伴角色"
           className="h-full w-full object-cover"
           referrerPolicy="no-referrer"
         />
       </div>
 
       <div className="min-w-0 flex-1">
-        <h2 className="card-title">🐰 Companion</h2>
+        <h2 className="card-title">🐰 陪伴角色</h2>
         <div className="panel-subtle mt-1">
-          <p className="text-xs">Lv{state.xp.level} · 语气：{toneLabel}</p>
+          <p className="text-xs">等级{state.xp.level} · 语气：{toneLabel}</p>
           <p className="mt-1 truncate text-sm">{state.companion.lastMessage}</p>
         </div>
         <div className="mt-2 flex gap-2 text-xs">

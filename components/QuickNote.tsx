@@ -12,8 +12,8 @@ export function QuickNote() {
 
   return (
     <section className="card flex h-full flex-col gap-2 overflow-hidden">
-      <h2 className="card-title">📝 Quick Notes</h2>
-      <textarea className="h-20 w-full resize-none panel-input text-sm leading-5" placeholder="Type a quick note..." value={content} onChange={(e) => setContent(e.target.value)} />
+      <h2 className="card-title">📝 快速笔记</h2>
+      <textarea className="h-20 w-full resize-none panel-input text-sm leading-5" placeholder="输入随手笔记..." value={content} onChange={(e) => setContent(e.target.value)} />
       <div className="flex gap-2">
         <input className="w-full panel-input text-sm" placeholder="标题（可选）" value={title} onChange={(e) => setTitle(e.target.value)} />
         <button className="soft-chip" onClick={() => {

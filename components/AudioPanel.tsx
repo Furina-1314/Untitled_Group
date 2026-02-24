@@ -18,7 +18,7 @@ export function AudioPanel() {
   return (
     <section className="card flex flex-col gap-2 overflow-hidden">
       <div className="flex items-center justify-between">
-        <h2 className="card-title">🎵 Local Music Player</h2>
+        <h2 className="card-title">🎵 本地音乐播放器</h2>
         <button className="soft-chip" onClick={() => setShowPlaylist((v) => !v)}>{showPlaylist ? '隐藏列表' : '播放列表'}</button>
       </div>
 
@@ -64,7 +64,7 @@ export function AudioPanel() {
               <button className="soft-chip" onClick={() => removeTrack(track.id)}>删</button>
             </li>
           ))}
-          {state.audio.tracks.length === 0 && <li className="py-3 text-center text-gray-400">No tracks imported</li>}
+          {state.audio.tracks.length === 0 && <li className="py-3 text-center text-gray-400">暂无导入曲目</li>}
         </ul>
       )}
       <p className="text-[11px] text-gray-500">播放列表固定显示4首高度，曲目较多时可滚动浏览。</p>

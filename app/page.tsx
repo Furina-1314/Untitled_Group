@@ -18,14 +18,14 @@ export default function HomePage() {
         >
           <img
             src={state.ui.avatarImage || 'https://picsum.photos/seed/lofi_study_girl/400/400'}
-            alt="Companion"
+            alt="陪伴角色"
             className="h-full w-full object-cover"
             referrerPolicy="no-referrer"
           />
         </button>
-        <p className="mt-2 text-xs tracking-[0.3em] text-stone-500">CLICK TO CHAT</p>
+        <p className="mt-2 text-xs tracking-[0.3em] text-stone-500">点击互动</p>
         <div className="mt-2 rounded-full border border-stone-100 bg-white/80 px-4 py-1 text-sm font-medium text-stone-500">
-          Level {state.xp.level} · {state.xp.totalXp} EXP
+          等级 {state.xp.level} · 经验 {state.xp.totalXp}
         </div>
       </div>
 
