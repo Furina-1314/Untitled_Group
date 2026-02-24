@@ -27,9 +27,9 @@ export function TodoCard() {
 
   return (
     <section className="card flex h-full flex-col gap-2 overflow-hidden">
-      <h2 className="card-title">✅ Quick Tasks</h2>
+      <h2 className="card-title">✅ 快速待办</h2>
       <div className="grid grid-cols-12 gap-1 text-xs">
-        <input className="col-span-7 panel-input" value={content} onChange={(e) => setContent(e.target.value)} placeholder="Add task..." />
+        <input className="col-span-7 panel-input" value={content} onChange={(e) => setContent(e.target.value)} placeholder="添加待办..." />
         <input className="col-span-3 panel-input" type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
         <button className="col-span-2 soft-chip" onClick={() => {
           if (!content.trim()) return;
@@ -58,7 +58,7 @@ export function TodoCard() {
           </li>
         ))}
       </ul>
-      {state.todos.length === 0 && <p className="py-2 text-center text-xs text-gray-400">No tasks</p>}
+      {state.todos.length === 0 && <p className="py-2 text-center text-xs text-gray-400">暂无待办</p>}
       {state.todos.length > 5 && <p className="mt-auto text-xs text-gray-500">仅展示前5条，前往待办页查看全部。</p>}
     </section>
   );

@@ -8,12 +8,12 @@ import { AppProvider, useAppStore } from '@/lib/store';
 import { GlobalAudioPlayer } from '@/components/GlobalAudioPlayer';
 
 const navs = [
-  { href: '/', label: 'Focus', icon: '🏠' },
-  { href: '/calendar', label: 'Calendar', icon: '🗓️' },
-  { href: '/todos', label: 'Tasks', icon: '✅' },
-  { href: '/notes', label: 'Notes', icon: '📝' },
-  { href: '/habits', label: 'Stats', icon: '📊' },
-  { href: '/settings', label: 'Settings', icon: '⚙️' }
+  { href: '/', label: '专注', icon: '🏠' },
+  { href: '/calendar', label: '日历', icon: '🗓️' },
+  { href: '/todos', label: '待办', icon: '✅' },
+  { href: '/notes', label: '笔记', icon: '📝' },
+  { href: '/habits', label: '统计', icon: '📊' },
+  { href: '/settings', label: '设置', icon: '⚙️' }
 ];
 
 function Shell({ children }: { children: ReactNode }) {
@@ -31,7 +31,7 @@ function Shell({ children }: { children: ReactNode }) {
       } : undefined}
     >
       <GlobalAudioPlayer />
-      <div className="app-bg">
+      <div className={`app-bg ${state.ui.backgroundImage ? 'app-bg-transparent' : ''}`}>
         <div className="pointer-events-none fixed inset-0 -z-10">
           <div className="blob blob-a" />
           <div className="blob blob-b" />
@@ -42,7 +42,7 @@ function Shell({ children }: { children: ReactNode }) {
           <aside className="sidebar">
             <div className="brand">
               <div className="brand-dot" />
-              <span className="hidden text-xl font-bold tracking-wide text-[#5d576b] lg:block">FocusFlow</span>
+              <span className="hidden text-xl font-bold tracking-wide text-[#5d576b] lg:block">专注流</span>
             </div>
 
             <nav className="flex-1 space-y-2 px-3 py-5">

@@ -18,6 +18,7 @@ export function FocusTimer() {
   }, [tickFocus]);
 
   const runtime = state.focusRuntime;
+  const statusText = { idle: '空闲', running: '专注中', paused: '已暂停', break: '休息中' }[runtime.status];
 
   return (
     <section className="card flex flex-col gap-2 overflow-hidden">
@@ -36,7 +37,7 @@ export function FocusTimer() {
 
       <div className="panel-subtle text-center">
         <div className="text-3xl font-bold tracking-widest sm:text-4xl">{toClock(runtime.remainingSec)}</div>
-        <div className="mt-1 truncate text-xs text-gray-600">{runtime.status}｜已专注 {Math.floor(runtime.elapsedSec / 60)} 分</div>
+        <div className="mt-1 truncate text-xs text-gray-600">{statusText}｜已专注 {Math.floor(runtime.elapsedSec / 60)} 分</div>
       </div>
 
       <div className="grid grid-cols-3 gap-1 text-xs">
@@ -48,7 +49,7 @@ export function FocusTimer() {
       </div>
 
       <div className="mt-auto rounded-2xl border border-stone-100 bg-white/80 p-2 text-xs leading-5 break-words">
-        XP {state.xp.totalXp}｜Lv{state.xp.level}｜好感 {state.xp.affinity}｜连续 {state.xp.streakDays} 天
+        经验 {state.xp.totalXp}｜等级{state.xp.level}｜好感 {state.xp.affinity}｜连续 {state.xp.streakDays} 天
       </div>
     </section>
   );
