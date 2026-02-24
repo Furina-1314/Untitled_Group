@@ -18,20 +18,30 @@ export function CompanionCard() {
   const toneLabel = { relaxed: '轻松', focused: '认真', supportive: '鼓励' }[state.companion.currentTone];
 
   return (
-    <section className="card flex flex-col gap-2 overflow-hidden">
-      <h2 className="card-title">🐰 陪伴角色</h2>
-      <div className="rounded-2xl bg-[#fff5fa] p-3">
-        <p className="text-xs">Lv{state.xp.level} · 语气：{toneLabel}</p>
-        <p className="mt-2 break-words text-sm">{state.companion.lastMessage}</p>
+    <section className="card flex flex-row items-center gap-4 overflow-hidden">
+      <div className="h-24 w-24 overflow-hidden rounded-full border-4 border-white shadow-md">
+        <img
+          src={state.ui.avatarImage || 'https://picsum.photos/seed/lofi_study_girl/300/300'}
+          alt="Companion"
+          className="h-full w-full object-cover"
+          referrerPolicy="no-referrer"
+        />
       </div>
-      <div className="flex gap-2 text-xs">
-        <button className="soft-chip" onClick={() => {
-          const text = companionMessage(scene);
-          if (state.companion.voiceEnabled) speak(text);
-        }}>互动</button>
-        <button className="soft-chip" onClick={toggleCompanionVoice}>{state.companion.voiceEnabled ? '关闭语音' : '开启语音'}</button>
+
+      <div className="min-w-0 flex-1">
+        <h2 className="card-title">🐰 Companion</h2>
+        <div className="panel-subtle mt-1">
+          <p className="text-xs">Lv{state.xp.level} · 语气：{toneLabel}</p>
+          <p className="mt-1 truncate text-sm">{state.companion.lastMessage}</p>
+        </div>
+        <div className="mt-2 flex gap-2 text-xs">
+          <button className="soft-chip" onClick={() => {
+            const text = companionMessage(scene);
+            if (state.companion.voiceEnabled) speak(text);
+          }}>互动</button>
+          <button className="soft-chip" onClick={toggleCompanionVoice}>{state.companion.voiceEnabled ? '关闭语音' : '开启语音'}</button>
+        </div>
       </div>
-      <p className="mt-auto text-xs text-gray-500">专注时更严格，休息时更温和。</p>
     </section>
   );
 }

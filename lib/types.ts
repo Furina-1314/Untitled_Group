@@ -93,6 +93,8 @@ export interface CompanionState {
 
 export interface UiPrefs {
   backgroundImage?: string;
+  avatarImage?: string;
+  soundEnabled: boolean;
 }
 
 export interface AppState {

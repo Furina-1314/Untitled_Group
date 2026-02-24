@@ -17,7 +17,7 @@ const initialState: AppState = {
   todos: [],
   audio: { noiseVolume: 50, musicVolume: 40, mixRatio: 0.5, tracks: [], playing: false, currentSec: 0, durationSec: 0 },
   companion: { hidden: false, voiceEnabled: true, currentTone: 'relaxed', lastMessage: '今天也一起专注完成目标。' },
-  ui: {}
+  ui: { soundEnabled: true }
 };
 
 type AppContextType = {
@@ -45,10 +45,13 @@ type AppContextType = {
   addTrack: (track: AudioTrack) => void;
   removeTrack: (id: string) => void;
   nextTrack: () => void;
+  prevTrack: () => void;
   togglePlay: () => void;
   companionMessage: (scene: 'idle' | 'running' | 'break') => string;
   toggleCompanionVoice: () => void;
   setBackgroundImage: (image?: string) => void;
+  setAvatarImage: (image?: string) => void;
+  toggleSoundEnabled: () => void;
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -60,7 +63,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw) {
       try {
-        setState(JSON.parse(raw) as AppState);
+        const parsed = JSON.parse(raw) as AppState;
+        setState({ ...parsed, ui: { ...parsed.ui, soundEnabled: parsed.ui?.soundEnabled ?? true } });
       } catch {
         setState(initialState);
       }
@@ -223,6 +227,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const next = prev.audio.tracks[(idx + 1) % prev.audio.tracks.length];
     return { ...prev, audio: { ...prev.audio, currentTrackId: next.id, currentSec: 0 } };
   });
+  const prevTrack = () => setState((prev) => {
+    const idx = prev.audio.tracks.findIndex((t) => t.id === prev.audio.currentTrackId);
+    if (idx < 0 || prev.audio.tracks.length === 0) return prev;
+    const prevTrackItem = prev.audio.tracks[(idx - 1 + prev.audio.tracks.length) % prev.audio.tracks.length];
+    return { ...prev, audio: { ...prev.audio, currentTrackId: prevTrackItem.id, currentSec: 0 } };
+  });
   const togglePlay = () => setState((prev) => ({ ...prev, audio: { ...prev.audio, playing: !prev.audio.playing } }));
 
   const companionMessage = (scene: 'idle' | 'running' | 'break') => {
@@ -243,6 +253,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
   const toggleCompanionVoice = () => setState((prev) => ({ ...prev, companion: { ...prev.companion, voiceEnabled: !prev.companion.voiceEnabled } }));
   const setBackgroundImage = (image?: string) => setState((prev) => ({ ...prev, ui: { ...prev.ui, backgroundImage: image } }));
+  const setAvatarImage = (image?: string) => setState((prev) => ({ ...prev, ui: { ...prev.ui, avatarImage: image } }));
+  const toggleSoundEnabled = () => setState((prev) => ({ ...prev, ui: { ...prev.ui, soundEnabled: !prev.ui.soundEnabled } }));
 
   const value = useMemo<AppContextType>(() => ({
     state,
@@ -269,10 +281,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
     addTrack,
     removeTrack,
     nextTrack,
+    prevTrack,
     togglePlay,
     companionMessage,
     toggleCompanionVoice,
-    setBackgroundImage
+    setBackgroundImage,
+    setAvatarImage,
+    toggleSoundEnabled
   }), [state]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

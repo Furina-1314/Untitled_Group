@@ -2,24 +2,27 @@
 
 import './globals.css';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { AppProvider, useAppStore } from '@/lib/store';
 import { GlobalAudioPlayer } from '@/components/GlobalAudioPlayer';
 
 const navs = [
-  { href: '/', label: '主控台' },
-  { href: '/notes', label: '笔记' },
-  { href: '/calendar', label: '日历' },
-  { href: '/habits', label: '习惯' },
-  { href: '/todos', label: '待办' },
-  { href: '/settings', label: '设置' }
+  { href: '/', label: 'Focus', icon: '🏠' },
+  { href: '/calendar', label: 'Calendar', icon: '🗓️' },
+  { href: '/todos', label: 'Tasks', icon: '✅' },
+  { href: '/notes', label: 'Notes', icon: '📝' },
+  { href: '/habits', label: 'Stats', icon: '📊' },
+  { href: '/settings', label: 'Settings', icon: '⚙️' }
 ];
 
 function Shell({ children }: { children: ReactNode }) {
   const { state } = useAppStore();
+  const pathname = usePathname();
+
   return (
     <body
-      className="lofi-bg min-h-screen overflow-hidden text-lofi-text"
+      className="text-lofi-text"
       style={state.ui.backgroundImage ? {
         backgroundImage: `linear-gradient(rgba(255,255,255,0.35), rgba(255,255,255,0.35)), url(${state.ui.backgroundImage})`,
         backgroundSize: 'cover',
@@ -28,25 +31,37 @@ function Shell({ children }: { children: ReactNode }) {
       } : undefined}
     >
       <GlobalAudioPlayer />
-      <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="blob blob-a" />
-        <div className="blob blob-b" />
-        <div className="blob blob-c" />
-      </div>
+      <div className="app-bg">
+        <div className="pointer-events-none fixed inset-0 -z-10">
+          <div className="blob blob-a" />
+          <div className="blob blob-b" />
+          <div className="blob blob-c" />
+        </div>
 
-      <div className="mx-auto flex h-screen w-full max-w-7xl flex-col px-3 py-3">
-        <header className="mb-3 flex h-10 items-center justify-between rounded-2xl border border-white/40 bg-white/50 px-3 backdrop-blur-sm">
-          <div className="text-sm font-semibold">🌸 Focus Companion</div>
-          <nav className="flex items-center gap-2 text-xs sm:text-sm">
-            {navs.map((n) => (
-              <Link key={n.href} href={n.href} className="rounded-full px-2 py-1 hover:bg-white/70">
-                {n.label}
-              </Link>
-            ))}
-          </nav>
-        </header>
+        <div className="flex h-screen">
+          <aside className="sidebar">
+            <div className="brand">
+              <div className="brand-dot" />
+              <span className="hidden text-xl font-bold tracking-wide text-[#5d576b] lg:block">FocusFlow</span>
+            </div>
 
-        <div className="min-h-0 flex-1">{children}</div>
+            <nav className="flex-1 space-y-2 px-3 py-5">
+              {navs.map((n) => {
+                const active = pathname === n.href;
+                return (
+                  <Link key={n.href} href={n.href} className={`side-link ${active ? 'side-link-active' : ''}`}>
+                    <span className="text-base">{n.icon}</span>
+                    <span className="hidden lg:inline">{n.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </aside>
+
+          <main className={`flex-1 overflow-auto p-4 lg:p-8 ${state.ui.backgroundImage ? 'bg-white/60 backdrop-blur-[2px]' : ''}`}>
+            {children}
+          </main>
+        </div>
       </div>
     </body>
   );
